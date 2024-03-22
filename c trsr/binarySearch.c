@@ -1,5 +1,29 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
+#include <time.h>
+
+void swap(int* xp, int* yp){
+    int temp =*xp;
+    *xp =  *yp;
+    *yp = temp;
+}
+
+void sort(int arr[], int n){
+    int i, j;
+    bool swapped;
+    for (i = 0; i < n; i++){
+        swapped = false;
+        for (j = 0; j < n-i-1; j++){
+            if (arr[j] > arr[j + 1]){
+                swap(&arr[j], &arr[j + 1]);
+                swapped = true;
+            }
+        }
+        if (swapped == false)
+            break;
+    }
+}
 
 // Function to perform binary search
 int binarySearch(int arr[], int size, int key) {
@@ -20,8 +44,10 @@ int binarySearch(int arr[], int size, int key) {
 }
 
 int main(int argc, char *argv[]) {
+    time_t start, end;
+
     if (argc < 3) {
-        printf("Usage: %s <array_size> <key> <sorted_array_elements...>\n", argv[0]);
+        printf("Usage: %s <array_size> <key> <array_elements...>\n", argv[0]);
         return 1;
     }
 
@@ -43,8 +69,13 @@ int main(int argc, char *argv[]) {
         arr[i] = atoi(argv[i + 3]);
     }
 
-    // Perform binary search (assuming array is sorted)
+    sort(arr, size);
+
+    time(&start);
+
     int result = binarySearch(arr, size, key);
+
+    time(&end);
 
     if (result != -1) {
         printf("Element found at index: %d\n", result);
@@ -52,7 +83,10 @@ int main(int argc, char *argv[]) {
         printf("Element not found\n");
     }
 
-    // Free dynamically allocated memory
+    double time_taken = end - start;
+    printf("Time taken by program is: %.5f sec\n", time_taken);
+
+
     free(arr);
 
     return 0;
