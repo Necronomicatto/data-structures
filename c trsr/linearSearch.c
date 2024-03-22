@@ -2,10 +2,16 @@
 #include <stdlib.h>
 #include <time.h>
 
+void gen_random_numbers(int *arr, int size, int min, int max){
+    for (int i =0; i < size; i++){
+        arr[i] = rand() % (max - min + 1) + min;
+    }
+}
+
 int search(int arr[], int N, int x){
     for (int i = 0; i < N; i++){
         if (arr[i] == x){
-            return i;
+        return i;
         }
     }
     return -1;
@@ -13,45 +19,27 @@ int search(int arr[], int N, int x){
 
 int main(int argc, char* argv[]){
 
-    time_t start, end;
-    if (argc < 3) {
-        printf("Usage: %s <size> <key> <elements>\n", argv[0]);
-        return 1;
+    clock_t start, end;   
+
+    int sizeN = 1000000;
+    int sizeQ = 100000;
+
+    int key[sizeQ];
+    int arr[sizeN];
+    int arr2[sizeQ];
+
+    gen_random_numbers(arr, sizeN, 0, 100000);
+    gen_random_numbers(key, sizeQ, 0, 100000);
+
+    
+    start = clock();
+    for (int i = 0; i < sizeQ; i++){
+        int result = search(arr, sizeN, key[i]);
+        arr2[i] = result;
     }
+    end = clock();
+    
+    printf("\nTime taken by program is: %.10f sec\n", (((double) end - start) / CLOCKS_PER_SEC));
 
-    int size = atoi(argv[1]);
-    int key = atoi (argv[2]);
-
-    if (argc != size +3 ){
-        printf("invalid number of array elements\n");
-        return 1;
-    }
-
-    int *arr = (int *)malloc(size * sizeof(int));
-    if (arr == NULL){
-        printf("Memory allocation failed\n");
-        return 1;
-    }
-
-    for (int i = 0; i < size; i++) {
-        arr[i] = atoi(argv[i + 3]);
-    }
-
-    time(&start);
-
-    int result = search(arr, size, key);
-
-    time(&end);
-
-    if (result != -1) {
-        printf("%d\n", result);
-    } else if (result == -1){
-        printf("not found\n");
-    }
-
-    double time_taken = end - start;
-    printf("Time taken by program is: %.5f sec\n", time_taken);
-
-    free(arr);
     return 0;
 }
