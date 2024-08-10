@@ -85,11 +85,19 @@ int binarySearch(int arr[], int size, int key) {
 int main(int argc, char *argv[]) {
     clock_t start, end;
     int sizeN = 1000000;
-    int sizeQ = 1000;
+    int sizeQ = 100000;
 
-    int key[sizeQ];
-    int arr[sizeN];
-    int arr2[sizeQ];
+    // Dynamic memory allocation with error checking
+    int *key = (int*)malloc(sizeQ * sizeof(int));
+    int *arr = (int*)malloc(sizeN * sizeof(int));
+    int *arr2 = (int*)malloc(sizeQ * sizeof(int));
+    if (key == NULL || arr == NULL || arr2 == NULL) {
+        fprintf(stderr, "Memory allocation failed!\n");
+        return 1;
+    }
+
+    // Seed the random number generator
+    srand(time(NULL));
 
     gen_random_numbers(arr, sizeN, 0, 100000);
     gen_random_numbers(key, sizeQ, 0, 100000);
@@ -104,7 +112,12 @@ int main(int argc, char *argv[]) {
 
     end = clock();
 
-printf("\nTime taken by program is: %.10f sec\n", (((double) end - start) / CLOCKS_PER_SEC));
+    printf("\nTime taken by program is: %.10f sec\n", (((double) end - start) / CLOCKS_PER_SEC));
+
+    // Free allocated memory
+    free(key);
+    free(arr);
+    free(arr2);
 
     return 0;
 }
